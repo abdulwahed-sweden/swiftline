@@ -1,0 +1,38 @@
+[package]
+name = "swiftline"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Core
+anyhow = "1.0.99"
+clap = { version = "4.5.47", features = ["derive"] }
+tokio = { version = "1.47.1", features = ["full"] }
+reqwest = { version = "0.12.23", default-features = false, features = ["json", "stream", "rustls-tls"] }
+serde_json = "1.0.145"
+url = "2.5.7"
+
+# UX
+indicatif = "0.18.0"
+futures = "0.3.31"
+
+# Logging
+env_logger = "0.11.8"
+log = "0.4.28"
+
+# Colors / styling
+owo-colors = "4.2.2"
+nu-ansi-term = "0.50.1"
+colored_json = "5.0.0"
+atty = "0.2.14"
+
+# JSON parsing
+json5 = "0.4"
+
+[dev-dependencies]
+assert_cmd = "2.0"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = "z"

@@ -1,0 +1,4 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.50s
+     Running `target\debug\swiftline.exe json select --file test.json --path 'data.items[0].name'`
+[4m[1mJSON Select[0m[0m
+"Alice"

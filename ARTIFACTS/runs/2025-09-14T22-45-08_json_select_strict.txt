@@ -1,0 +1,4 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
+     Running `target\debug\swiftline.exe json select --text '{"a":{"b":[1,2,3]}}' --path 'a.b[2]'`
+[4m[1mJSON Select[0m[0m
+3

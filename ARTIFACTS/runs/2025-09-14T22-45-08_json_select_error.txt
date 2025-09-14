@@ -1,0 +1,16 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.50s
+     Running `target\debug\swiftline.exe json select --text '{a:{b:[1,2,3]}}' --path 'a.b[2]'`
+[4m[1mJSON Select[0m[0m
+Error: Invalid JSON format - keys must be in double quotes
+
+Examples of valid JSON:
+  PowerShell: --text '{"a":{"b":[1,2,3]}}'
+  CMD:        --text "{\"a\":{\"b\":[1,2,3]}}"
+
+Alternative options:
+  Use --json5 for relaxed parsing: --json5 --text '{a:{b:[1,2,3]}}'
+  Use stdin: echo '{"a":{"b":[1,2,3]}}' | swiftline json select --path a.b[2]
+  Use file: swiftline json select --file data.json --path a.b[2]
+
+Original error: key must be a string at line 1 column 2
+error: process didn't exit successfully: `target\debug\swiftline.exe json select --text '{a:{b:[1,2,3]}}' --path 'a.b[2]'` (exit code: 1)

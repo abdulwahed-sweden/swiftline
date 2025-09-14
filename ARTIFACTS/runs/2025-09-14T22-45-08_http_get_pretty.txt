@@ -1,0 +1,13 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.49s
+     Running `target\debug\swiftline.exe http get 'https://httpbin.org/get' --pretty`
+[1mStatus:[0m [1m[32m200 OK[39m[0m
+{
+  "args": {},
+  "headers": {
+    "Accept": "*/*",
+    "Host": "httpbin.org",
+    "X-Amzn-Trace-Id": "Root=1-68c7296c-1e6868f022212d5b5767e03f"
+  },
+  "origin": "83.233.137.234",
+  "url": "https://httpbin.org/get"
+}
