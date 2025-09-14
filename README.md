@@ -23,9 +23,13 @@ cargo run -- --help
 ```bash
 # Simple GET with pretty JSON
 swiftline http get https://httpbin.org/get --pretty
+swiftline http get https://dummyjson.com/products --pretty
 
 # With custom headers and timeout
 swiftline http get https://api.github.com/user -H "Authorization: token xyz" --timeout 20
+
+# Download API data to file for later processing
+swiftline http get https://dummyjson.com/products --save products.json
 
 # Download file with progress
 swiftline http get https://speed.hetzner.de/1MB.bin --save downloaded.bin
@@ -38,7 +42,8 @@ swiftline http get https://speed.hetzner.de/1MB.bin --save downloaded.bin
 swiftline json select --text '{"user":{"name":"Alice","items":[1,2,3]}}' --path user.name
 
 # File input (recommended for Windows to avoid quoting issues)
-swiftline json select --file data.json --path user.items[2]
+swiftline json select --file products.json --path products[0].title
+swiftline json select --file products.json --path total
 
 # JSON5 relaxed parsing (unquoted keys, trailing commas, etc.)
 swiftline json select --json5 --text '{user: {name: "Alice", items: [1,2,3]}}' --path user.name
@@ -46,14 +51,20 @@ swiftline json select --json5 --text '{user: {name: "Alice", items: [1,2,3]}}' -
 # From stdin (pipeline-friendly)
 echo '{"a":{"b":[1,2,3]}}' | swiftline json select --path a.b[2]
 curl -s https://httpbin.org/get | swiftline json select --path headers.Host
+
+# Real-world examples with downloaded API data
+swiftline json select --file products.json --path products[5].brand      # Get brand of 6th product
+swiftline json select --file products.json --path products[9].price      # Get price of 10th product
 ```
 
 #### Windows-Specific Examples
 
 **PowerShell:**
+
 ```powershell
-# Using file input (easiest)
-swiftline json select --file data.json --path a.b[2]
+# Download and query API data (recommended workflow)
+swiftline http get https://dummyjson.com/products --save products.json
+swiftline json select --file products.json --path products[0].title
 
 # Using stdin
 echo '{"a":{"b":[1,2,3]}}' | swiftline json select --path a.b[2]
@@ -63,15 +74,18 @@ swiftline json select --json5 --text '{a: {b: [1,2,3]}}' --path a.b[2]
 ```
 
 **CMD:**
+
 ```cmd
-REM File input recommended
-swiftline json select --file data.json --path a.b[2]
+REM Download and analyze data
+swiftline http get https://dummyjson.com/products --save products.json
+swiftline json select --file products.json --path total
 
 REM Strict JSON with escaping (complex)
 swiftline json select --text "{\"a\":{\"b\":[1,2,3]}}" --path a.b[2]
 ```
 
 Path syntax:
+
 - Objects: `user.profile.name`
 - Arrays: `items[0]`, `users[2].email`
 - Mixed: `data.results[0].id`
@@ -98,7 +112,7 @@ src/
 ## Features
 
 - 🚀 Fast compilation and runtime
-- 🪟 Windows-friendly with ANSI colors  
+- 🪟 Windows-friendly with ANSI colors
 - 🔒 Secure rustls TLS (no native TLS issues)
 - 📊 Progress bars for downloads
 - 🎨 Auto-colored JSON output (TTY detection)
@@ -113,6 +127,7 @@ src/
 ### JSON Parsing Issues
 
 **Common Error**: "key must be a string"
+
 ```bash
 # ❌ This fails (unquoted keys)
 swiftline json select --text "{a:{b:[1,2,3]}}" --path a.b[2]
@@ -121,12 +136,16 @@ swiftline json select --text "{a:{b:[1,2,3]}}" --path a.b[2]
 # 1. Use strict JSON
 swiftline json select --text '{"a":{"b":[1,2,3]}}' --path a.b[2]
 
-# 2. Use JSON5 flag for relaxed parsing  
+# 2. Use JSON5 flag for relaxed parsing
 swiftline json select --json5 --text '{a:{b:[1,2,3]}}' --path a.b[2]
 
 # 3. Use file input (best for Windows)
 echo '{"a":{"b":[1,2,3]}}' > data.json
 swiftline json select --file data.json --path a.b[2]
+
+# 4. Real-world API workflow
+swiftline http get https://dummyjson.com/products --save products.json
+swiftline json select --file products.json --path products[0].title
 ```
 
 **PowerShell Quoting**: Complex JSON strings can be tricky in PowerShell. Use file input or stdin:
@@ -135,6 +154,6 @@ swiftline json select --file data.json --path a.b[2]
 # Easiest approach
 swiftline json select --file data.json --path key
 
-# Stdin approach  
+# Stdin approach
 echo '{"key":"value"}' | swiftline json select --path key
 ```
